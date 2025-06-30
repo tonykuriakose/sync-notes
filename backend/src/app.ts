@@ -12,7 +12,6 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   next();
 });
 
@@ -21,22 +20,19 @@ app.use('*', (req: Request, res: Response) => {
     success: false,
     message: 'Route not found',
     path: req.originalUrl,
-    method: req.method,
   });
 });
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error('❌ Error occurred:', {
+  console.error('Error occurred:', {
     message: error.message,
     url: req.url,
-    method: req.method,
   });
 
   res.status(500).json({
     success: false,
     message: 'Internal server error',
     error: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong',
-    timestamp: new Date().toISOString(),
   });
 });
 
